@@ -1,0 +1,6 @@
+@Peppol_Bis_HostAddress = http://localhost:5160
+
+GET {{Peppol_Bis_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
