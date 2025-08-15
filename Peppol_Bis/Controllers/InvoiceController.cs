@@ -54,7 +54,6 @@ namespace Peppol_Bis.Controllers
                     currency = totalAmountElem.Attribute("currencyID")?.Value ?? currency;
                 }
 
-                // Tạo đối tượng Invoice
                 var invoice = new Invoice
                 {
                     InvoiceNumber = invoiceNumber,
