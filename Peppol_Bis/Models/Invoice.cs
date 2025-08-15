@@ -1,14 +1,34 @@
-﻿namespace Peppol_Bis.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Peppol_Bis.Models;
+
+[Table("Invoice")]
+public partial class Invoice
 {
-    public class Invoice
-    {
-        public string? InvoiceNumber { get; set; }
-        public DateTime IssueDate { get; set; }
-        public string? SupplierName { get; set; }
-        public string? SupplierAddress { get; set; }
-        public string? CustomerName { get; set; }
-        public string? CustomerAddress { get; set; }
-        public decimal TotalAmount { get; set; }
-        public string? Currency { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+
+    [StringLength(50)]
+    public string? InvoiceNumber { get; set; }
+
+    public DateOnly? IssueDate { get; set; }
+
+    [StringLength(255)]
+    public string? SupplierName { get; set; }
+
+    [StringLength(255)]
+    public string? SupplierAddress { get; set; }
+
+    [StringLength(255)]
+    public string? CustomerName { get; set; }
+
+    [StringLength(255)]
+    public string? CustomerAddress { get; set; }
+
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal? TotalAmount { get; set; }
+
+    [StringLength(10)]
+    public string? Currency { get; set; }
 }

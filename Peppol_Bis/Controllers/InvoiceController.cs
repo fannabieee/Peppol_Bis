@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Peppol_Bis.Dtos.Request;
 using Peppol_Bis.Models;
 using System.Globalization;
 using System.Xml.Linq;
@@ -7,10 +8,12 @@ namespace Peppol_Bis.Controllers
 {
     [Route("api/invoice")]
     [ApiController]
-    public class InvoiceController : ControllerBase
+    public class InvoiceController(PeppolUblContext context) : ControllerBase
     {
+        private readonly PeppolUblContext _context = context;
+
         [HttpPost("import-xml")]
-        public IActionResult ImportInvoiceXml([FromBody] InvoiceRequest invoiceRequest)
+        public async Task<IActionResult> ImportInvoiceXml([FromBody] InvoiceRequest invoiceRequest)
         {
             try
             {
@@ -21,7 +24,7 @@ namespace Peppol_Bis.Controllers
 
                 string invoiceNumber = doc.Descendants(cbc + "ID").FirstOrDefault()?.Value ?? string.Empty;
                 string issueDateStr = doc.Descendants(cbc + "IssueDate").FirstOrDefault()?.Value ?? string.Empty;
-                DateTime issueDate = DateTime.Parse(issueDateStr);
+                DateOnly issueDate = DateOnly.FromDateTime(DateTime.Parse(issueDateStr));
 
                 string supplierName = doc.Descendants(cac + "AccountingSupplierParty")
                                         .Descendants(cac + "PartyName")
@@ -63,6 +66,9 @@ namespace Peppol_Bis.Controllers
                     TotalAmount = totalAmount,
                     Currency = currency
                 };
+
+                await _context.Invoices.AddAsync(invoice);
+                await _context.SaveChangesAsync();
 
                 return Ok(invoice);
             }
